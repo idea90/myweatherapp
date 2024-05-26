@@ -22,10 +22,12 @@
 
         .top-container {
             display: flex;
-            justify-content: center;
-            margin-bottom: 20px;
+            justify-content: flex-start;
+            width: 100%;
+            padding: 20px;
             position: absolute;
-            top: 20px;
+            top: 0;
+            left: 0;
         }
 
         input[type="text"] {
@@ -67,6 +69,7 @@
             border-radius: 10px;
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
             animation: slide-up 1s ease-out;
+            margin-top: 80px; /* Adjusted margin top to move the container down */
         }
 
         .weather-info {
@@ -124,7 +127,7 @@
     <script>
         async function fetchWeather() {
             const apiKey = 'f375dc9546b54db6a7aa68c549d06b2c';
-            const city = document.getElementById('cityInput').value;
+            const city = document.getElementById('cityInput').value || 'London'; // Default city if input is empty
             const apiUrl = `https://api.weatherbit.io/v2.0/current?city=${city}&key=${apiKey}`;
 
             try {
@@ -175,6 +178,12 @@
             weatherInfoElement.innerHTML = `<p>${message}</p>`;
             weatherInfoElement.classList.add('fade-in');
         }
+
+        // Auto-refresh the weather data every 5 minutes (300000 milliseconds)
+        setInterval(fetchWeather, 300000);
+
+        // Initial fetch to display default city weather on load
+        fetchWeather();
     </script>
 </body>
 </html>
