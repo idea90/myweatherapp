@@ -8,7 +8,7 @@
     <style>
         body {
             font-family: 'Roboto', sans-serif;
-            background-color: #121212;
+            background: linear-gradient(135deg, #1d2b64 0%, #f8cdda 100%);
             color: #ffffff;
             margin: 0;
             padding: 0;
@@ -24,12 +24,14 @@
             display: flex;
             justify-content: center;
             margin-bottom: 20px;
+            position: absolute;
+            top: 20px;
         }
 
         input[type="text"] {
             padding: 10px;
             font-size: 16px;
-            border: 1px solid #333;
+            border: 1px solid #ccc;
             border-radius: 5px;
             margin-right: 10px;
             background-color: #333;
@@ -60,7 +62,7 @@
         .container {
             max-width: 600px;
             text-align: center;
-            background-color: #1e1e1e;
+            background: linear-gradient(135deg, #1e1e1e 0%, #3a3a3a 100%);
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
@@ -80,12 +82,12 @@
         .temperature {
             font-size: 48px;
             font-weight: bold;
-            color: #fbc02d; /* Vibrant yellow color */
+            color: #fbc02d;
         }
 
         .weather-icon {
             font-size: 48px;
-            color: #29b6f6; /* Vibrant blue color */
+            color: #29b6f6;
         }
 
         @keyframes slide-up {
@@ -176,4 +178,3 @@
     </script>
 </body>
 </html>
-
