@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather App</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #121212;
+            color: #ffffff;
+            margin: 0;
+            padding: 0;
+            animation: fade-in 1s ease-out;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        .top-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        input[type="text"] {
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #333;
+            border-radius: 5px;
+            margin-right: 10px;
+            background-color: #333;
+            color: #fff;
+            transition: border-color 0.3s ease;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #66afe9;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .container {
+            max-width: 600px;
+            text-align: center;
+            background-color: #1e1e1e;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            animation: slide-up 1s ease-out;
+        }
+
+        .weather-info {
+            margin-top: 20px;
+            animation: fade-in 1s ease-out;
+        }
+
+        .weather-info p {
+            margin: 10px 0;
+            color: #ccc;
+        }
+
+        .temperature {
+            font-size: 48px;
+            font-weight: bold;
+            color: #fbc02d; /* Vibrant yellow color */
+        }
+
+        .weather-icon {
+            font-size: 48px;
+            color: #29b6f6; /* Vibrant blue color */
+        }
+
+        @keyframes slide-up {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fade-in {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="top-container">
+        <input type="text" id="cityInput" placeholder="Enter city">
+        <button onclick="fetchWeather()">Get Weather</button>
+    </div>
+    <div class="container">
+        <div class="weather-info" id="weather-info">
+            <!-- Weather information will be displayed here -->
+        </div>
+    </div>
+    <script>
+        async function fetchWeather() {
+            const apiKey = 'f375dc9546b54db6a7aa68c549d06b2c';
+            const city = document.getElementById('cityInput').value;
+            const apiUrl = `https://api.weatherbit.io/v2.0/current?city=${city}&key=${apiKey}`;
+
+            try {
+                const response = await fetch(apiUrl);
+                const data = await response.json();
+
+                if (data && data.data && data.data.length > 0) {
+                    const weatherData = data.data[0];
+                    const temperature = weatherData.temp;
+                    const description = weatherData.weather.description;
+
+                    displayWeather(temperature, description);
+                } else {
+                    displayError('Unable to fetch weather data.');
+                }
+            } catch (error) {
+                displayError('An error occurred while fetching weather data.');
+            }
+        }
+
+        function getWeatherIcon(description) {
+            if (description.toLowerCase().includes('rain')) {
+                return '<i class="fas fa-cloud-showers-heavy weather-icon" style="color: #29b6f6;"></i>';
+            } else if (description.toLowerCase().includes('clear')) {
+                return '<i class="fas fa-sun weather-icon" style="color: #ffeb3b;"></i>';
+            } else if (description.toLowerCase().includes('cloud')) {
+                return '<i class="fas fa-cloud weather-icon" style="color: #90a4ae;"></i>';
+            } else if (description.toLowerCase().includes('snow')) {
+                return '<i class="fas fa-snowflake weather-icon" style="color: #00e5ff;"></i>';
+            } else {
+                return '<i class="fas fa-cloud weather-icon" style="color: #90a4ae;"></i>';
+            }
+        }
+
+        function displayWeather(temperature, description) {
+            const weatherInfoElement = document.getElementById('weather-info');
+            const weatherIcon = getWeatherIcon(description);
+            weatherInfoElement.innerHTML = `
+                ${weatherIcon}
+                <p class="temperature">${temperature}°C</p>
+                <p>${description}</p>
+            `;
+            weatherInfoElement.classList.add('fade-in');
+        }
+
+        function displayError(message) {
+            const weatherInfoElement = document.getElementById('weather-info');
+            weatherInfoElement.innerHTML = `<p>${message}</p>`;
+            weatherInfoElement.classList.add('fade-in');
+        }
+    </script>
+</body>
+</html>
+
