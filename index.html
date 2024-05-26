@@ -16,7 +16,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
+            justify-content: flex-start;
             height: 100vh;
         }
 
@@ -76,7 +76,7 @@
             border-radius: 10px;
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
             animation: slide-up 1s ease-out;
-            margin-top: 80px; /* Adjusted margin top to move the container down */
+            margin-top: 60px; /* Adjusted margin top to move the container down */
         }
 
         .weather-info {
@@ -126,10 +126,11 @@
         <input type="text" id="cityInput" placeholder="Enter city">
         <button onclick="fetchWeather()"><i class="fas fa-search"></i></button>
     </div>
+    <div class="weather-info" id="weather-info">
+        <!-- Weather information will be displayed here -->
+    </div>
     <div class="container">
-        <div class="weather-info" id="weather-info">
-            <!-- Weather information will be displayed here -->
-        </div>
+        <!-- This container can now be used for additional information or content -->
     </div>
     <script>
         async function fetchWeather() {
