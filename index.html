@@ -186,30 +186,30 @@
 
     <div class="forecast" id="forecast">
         <div class="forecast-day">
-            <i class="fas fa-cloud-sun"></i>
+            <i id="day1-icon" class="fas fa-cloud-sun"></i>
             <p id="day1-temp">--°C</p>
             <p id="day1-desc">Loading...</p>
         </div>
         <div class="forecast-day">
-            <i class="fas fa-cloud-sun"></i>
+            <i id="day2-icon" class="fas fa-cloud-sun"></i>
             <p id="day2-temp">--°C</p>
             <p id="day2-desc">Loading...</p>
         </div>
         <div class="forecast-day">
-            <i class="fas fa-cloud-sun"></i>
+            <i id="day3-icon" class="fas fa-cloud-sun"></i>
             <p id="day3-temp">--°C</p>
             <p id="day3-desc">Loading...</p>
         </div>
     </div>
 
     <script>
-        const apiKey = 'YOUR_API_KEY'; // Replace with your OpenWeatherMap API key
+        const apiKey = '8cd8174ec75638397cf97b7ce34b0ad3'; // OpenWeatherMap API key
 
         async function fetchWeather() {
             const city = document.getElementById('city-input').value;
             if (!city) return alert('Please enter a city name.');
             const apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${apiKey}`;
-            const forecastUrl = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&units=metric&cnt=3&appid=${apiKey}`;
+            const forecastUrl = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&units=metric&cnt=24&appid=${apiKey}`;
 
             try {
                 const response = await fetch(apiUrl);
@@ -247,11 +247,11 @@
         }
 
         function updateForecast(forecastData) {
-            const forecastDays = forecastData.list;
+            const forecastDays = forecastData.list.filter((_, index) => index % 8 === 0); // Get every 8th item (approx. 24 hours apart)
             for (let i = 0; i < 3; i++) {
                 const dayTemp = document.getElementById(`day${i+1}-temp`);
                 const dayDesc = document.getElementById(`day${i+1}-desc`);
-                const weatherIcon = document.querySelector(`#day${i+1}-icon`);
+                const weatherIcon = document.getElementById(`day${i+1}-icon`);
 
                 dayTemp.textContent = `${Math.round(forecastDays[i].main.temp)}°C`;
                 dayDesc.textContent = forecastDays[i].weather[0].description;
