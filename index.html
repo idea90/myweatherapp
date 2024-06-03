@@ -125,33 +125,29 @@
             color: #fff;
         }
 
-        /* 3-day forecast styling */
+        /* Forecast styling */
         .forecast {
             display: flex;
             justify-content: space-between;
             width: 100%;
-            background: rgba(255, 255, 255, 0.2);
-            padding: 10px;
-            border-radius: 15px;
-            backdrop-filter: blur(10px);
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
             margin-top: 20px;
-            position: absolute;
-            bottom: 20px;
         }
 
-        .forecast-day {
-            flex: 1;
+        .forecast-pill {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 10px 20px;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
             text-align: center;
             color: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
-        .forecast-day i {
+        .forecast-pill i {
             font-size: 40px;
-        }
-
-        .forecast-day p {
-            margin: 5px 0;
+            margin-bottom: 10px;
         }
 
         /* Keyframes for animations */
@@ -185,17 +181,20 @@
     </div>
 
     <div class="forecast" id="forecast">
-        <div class="forecast-day">
+        <div class="forecast-pill">
+            <p id="day1-date">Loading...</p>
             <i id="day1-icon" class="fas fa-cloud-sun"></i>
             <p id="day1-temp">--°C</p>
             <p id="day1-desc">Loading...</p>
         </div>
-        <div class="forecast-day">
+        <div class="forecast-pill">
+            <p id="day2-date">Loading...</p>
             <i id="day2-icon" class="fas fa-cloud-sun"></i>
             <p id="day2-temp">--°C</p>
             <p id="day2-desc">Loading...</p>
         </div>
-        <div class="forecast-day">
+        <div class="forecast-pill">
+            <p id="day3-date">Loading...</p>
             <i id="day3-icon" class="fas fa-cloud-sun"></i>
             <p id="day3-temp">--°C</p>
             <p id="day3-desc">Loading...</p>
@@ -249,10 +248,13 @@
         function updateForecast(forecastData) {
             const forecastDays = forecastData.list.filter((_, index) => index % 8 === 0); // Get every 8th item (approx. 24 hours apart)
             for (let i = 0; i < 3; i++) {
+                const date = new Date(forecastDays[i].dt_txt);
+                const dayDate = document.getElementById(`day${i+1}-date`);
                 const dayTemp = document.getElementById(`day${i+1}-temp`);
                 const dayDesc = document.getElementById(`day${i+1}-desc`);
                 const weatherIcon = document.getElementById(`day${i+1}-icon`);
 
+                dayDate.textContent = date.toDateString();
                 dayTemp.textContent = `${Math.round(forecastDays[i].main.temp)}°C`;
                 dayDesc.textContent = forecastDays[i].weather[0].description;
 
