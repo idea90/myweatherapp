@@ -5,15 +5,15 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Weather Website</title>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 <style>
     body {
         font-family: "Poppins", sans-serif;
         margin: 0;
         padding: 0;
-        background: linear-gradient(135deg, #0F2027, #203A43, #2C5364);
+        background: linear-gradient(to right, #4a00e0, #8e2de2);
         display: flex;
-        justify-content: center;
+        flex-direction: column;
         align-items: center;
         height: 100vh;
         color: #fff;
@@ -26,6 +26,8 @@
         box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
         padding: 20px;
         backdrop-filter: blur(10px);
+        margin-top: 20px;
+        text-align: center;
     }
     .search-bar {
         display: flex;
@@ -33,7 +35,7 @@
     }
     input[type="text"] {
         flex: 1;
-        padding: 8px;
+        padding: 6px;
         border: 2px solid #4CAF50;
         border-radius: 5px 0 0 5px;
         font-family: "Poppins", sans-serif;
@@ -42,7 +44,7 @@
         color: #fff;
     }
     button {
-        padding: 8px 16px;
+        padding: 6px 12px;
         background-color: #4CAF50;
         color: white;
         border: none;
@@ -63,13 +65,13 @@
         padding: 20px;
         text-align: center;
         margin-top: 20px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
         position: relative;
     }
     .weather-icon {
         font-size: 50px;
         margin-bottom: 10px;
-        color: #4ca1af;
+        color: #4caf50;
     }
     .weather-info p {
         margin: 5px 0;
@@ -105,6 +107,53 @@
         font-size: 12px;
         color: #fff;
     }
+    .loading {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 24px;
+        color: #4caf50;
+        height: 200px;
+    }
+    .spinner {
+        border: 4px solid rgba(255, 255, 255, 0.3);
+        border-top: 4px solid #4CAF50;
+        border-radius: 50%;
+        width: 24px;
+        height: 24px;
+        animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+    .forecast-container {
+        overflow-x: auto;
+        white-space: nowrap;
+        margin-top: 20px;
+        padding: 10px;
+        background: rgba(0, 0, 0, 0.7);
+        border-radius: 10px;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+    }
+    .forecast-card {
+        display: inline-block;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
+        padding: 10px;
+        margin: 0 10px;
+        text-align: center;
+        width: 100px;
+    }
+    .forecast-card p {
+        margin: 5px 0;
+        font-size: 14px;
+        color: #fff;
+    }
+    .forecast-card .weather-icon {
+        font-size: 30px;
+        color: #4caf50;
+    }
 </style>
 </head>
 <body>
@@ -112,42 +161,85 @@
 <div class="container">
     <div class="search-bar">
         <input type="text" id="locationInput" placeholder="Enter location">
-        <button onclick="getWeather()">Get Weather</button>
+        <button onclick="getWeather()"><i class="fas fa-search"></i></button>
     </div>
-    <div class="weather-info" id="weatherInfo"></div>
+    <div class="weather-info" id="weatherInfo">
+        <div class="weather-card">
+            <h2>--</h2>
+            <i class="weather-icon fas fa-question-circle"></i>
+            <p class="temperature">-- °C</p>
+            <p class="description">--</p>
+            <div class="wind-info">
+                <p>Wind: -- m/s <i class="fas fa-wind"></i></p>
+            </div>
+            <div class="humidity-info">
+                <p>Humidity: --% <i class="fas fa-tint"></i></p>
+            </div>
+        </div>
+    </div>
+    <div class="forecast-container" id="forecastContainer">
+        <!-- 3-day forecast will be appended here -->
+    </div>
 </div>
 
 <script>
     const weatherIcons = {
-        "01d": "fa-sun",
-        "01n": "fa-moon",
-        "02d": "fa-cloud-sun",
-        "02n": "fa-cloud-moon",
-        "03d": "fa-cloud",
-        "03n": "fa-cloud",
-        "04d": "fa-cloud-meatball",
-        "04n": "fa-cloud-meatball",
-        "09d": "fa-cloud-showers-heavy",
-        "09n": "fa-cloud-showers-heavy",
-        "10d": "fa-cloud-sun-rain",
-        "10n": "fa-cloud-moon-rain",
-        "11d": "fa-bolt",
-        "11n": "fa-bolt",
-        "13d": "fa-snowflake",
-        "13n": "fa-snowflake",
-        "50d": "fa-smog",
-        "50n": "fa-smog"
+        "01d": "fas fa-sun",
+        "01n": "fas fa-moon",
+        "02d": "fas fa-cloud-sun",
+        "02n": "fas fa-cloud-moon",
+        "03d": "fas fa-cloud",
+        "03n": "fas fa-cloud",
+        "04d": "fas fa-cloud",
+        "04n": "fas fa-cloud",
+        "09d": "fas fa-cloud-showers-heavy",
+        "09n": "fas fa-cloud-showers-heavy",
+        "10d": "fas fa-cloud-sun-rain",
+        "10n": "fas fa-cloud-moon-rain",
+        "11d": "fas fa-bolt",
+        "11n": "fas fa-bolt",
+        "13d": "fas fa-snowflake",
+        "13n": "fas fa-snowflake",
+        "50d": "fas fa-smog",
+        "50n": "fas fa-smog"
     };
 
     function getWeather() {
         const apiKey = '8cd8174ec75638397cf97b7ce34b0ad3';
-        const location = document.getElementById('locationInput').value;
-        const apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${location}&appid=${apiKey}&units=metric`;
+        const location = document.getElementById('locationInput').value.trim();
+        
+        if (location === '') {
+            document.getElementById('weatherInfo').innerHTML = `
+                <div class="weather-card">
+                    <h2>--</h2>
+                    <i class="weather-icon fas fa-question-circle"></i>
+                    <p class="temperature">-- °C</p>
+                    <p class="description">--</p>
+                    <div class="wind-info">
+                        <p>Wind: -- m/s <i class="fas fa-wind"></i></p>
+                    </div>
+                    <div class="humidity-info">
+                        <p>Humidity: --% <i class="fas fa-tint"></i></p>
+                    </div>
+                </div>
+            `;
+            return;
+        }
 
-        fetch(apiUrl)
+        const weatherUrl = `https://api.openweathermap.org/data/2.5/weather?q=${location}&appid=${apiKey}&units=metric`;
+        const forecastUrl = `https://api.openweathermap.org/data/2.5/forecast?q=${location}&appid=${apiKey}&units=metric`;
+
+        document.getElementById('weatherInfo').innerHTML = `
+            <div class="loading">
+                <div class="spinner"></div>
+            </div>
+        `;
+        document.getElementById('forecastContainer').innerHTML = '';
+
+        fetch(weatherUrl)
             .then(response => {
                 if (!response.ok) {
-                    throw new Error('Network response was not ok');
+                    throw new Error('City not found');
                 }
                 return response.json();
             })
@@ -164,7 +256,7 @@
                 weatherInfo.innerHTML = `
                     <div class="weather-card">
                         <h2>${cityName}</h2>
-                        <i class="fas ${iconClass} weather-icon"></i>
+                        <i class="weather-icon ${iconClass}"></i>
                         <p class="temperature">${temperature}°C</p>
                         <p class="description">${description}</p>
                         <div class="wind-info">
@@ -175,13 +267,70 @@
                         </div>
                     </div>
                 `;
+
+                return fetch(forecastUrl);
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('City not found');
+                }
+                return response.json();
+            })
+            .then(data => {
+                const forecastContainer = document.getElementById('forecastContainer');
+                const forecastList = data.list;
+                const dailyForecasts = {};
+
+                forecastList.forEach(item => {
+                    const date = new Date(item.dt * 1000).toLocaleDateString('en-US', {
+                        weekday: 'short',
+                        day: 'numeric'
+                    });
+
+                    if (!dailyForecasts[date]) {
+                        dailyForecasts[date] = item;
+                    }
+                });
+
+                Object.values(dailyForecasts).slice(0, 3).forEach(item => {
+                    const date = new Date(item.dt * 1000).toLocaleDateString('en-US', {
+                        weekday: 'short',
+                        day: 'numeric'
+                    });
+                    const temperature = item.main.temp.toFixed(1);
+                    const iconCode = item.weather[0].icon;
+                    const iconClass = weatherIcons[iconCode];
+                    const description = item.weather[0].description;
+
+                    forecastContainer.innerHTML += `
+                        <div class="forecast-card">
+                            <p>${date}</p>
+                            <i class="weather-icon ${iconClass}"></i>
+                            <p>${temperature}°C</p>
+                            <p>${description}</p>
+                        </div>
+                    `;
+                });
             })
             .catch(error => {
                 console.error('Error fetching weather data:', error);
-                                document.getElementById('weatherInfo').innerHTML = 'Failed to fetch weather data. Please try again.';
+                document.getElementById('weatherInfo').innerHTML = `
+                    <div class="weather-card">
+                        <h2>City Not Found</h2>
+                        <i class="weather-icon fas fa-exclamation-triangle"></i>
+                        <p class="temperature">-- °C</p>
+                        <p class="description">Please try again</p>
+                        <div class="wind-info">
+                            <p>Wind: -- m/s <i class="fas fa-wind"></i></p>
+                        </div>
+                        <div class="humidity-info">
+                            <p>Humidity: --% <i class="fas fa-tint"></i></p>
+                        </div>
+                    </div>
+                `;
             });
     }
 </script>
 
 </body>
-</html>
+</html
