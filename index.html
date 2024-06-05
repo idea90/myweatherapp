@@ -91,7 +91,7 @@
         font-size: 20px;
         text-transform: capitalize;
     }
-    .wind-info, .humidity-info, .sun-info {
+    .wind-info, .humidity-info, .sunrise-info, .sunset-info {
         position: absolute;
         bottom: 10px;
         font-size: 12px;
@@ -105,10 +105,15 @@
         left: 10px;
         text-align: left;
     }
-    .sun-info {
-        left: 50%;
-        transform: translateX(-50%);
-        text-align: center;
+    .sunrise-info {
+        left: 10px;
+        top: 10px;
+        text-align: left;
+    }
+    .sunset-info {
+        right: 10px;
+        top: 10px;
+        text-align: right;
     }
     .loading {
         display: flex;
@@ -176,8 +181,10 @@
             <div class="humidity-info">
                 <p>Humidity: --% <i class="fas fa-tint"></i></p>
             </div>
-            <div class="sun-info">
+            <div class="sunrise-info">
                 <p>Sunrise: -- <i class="fas fa-sun"></i></p>
+            </div>
+            <div class="sunset-info">
                 <p>Sunset: -- <i class="fas fa-moon"></i></p>
             </div>
         </div>
@@ -244,8 +251,10 @@
                     <div class="humidity-info">
                         <p>Humidity: --% <i class="fas fa-tint"></i></p>
                     </div>
-                    <div class="sun-info">
+                    <div class="sunrise-info">
                         <p>Sunrise: -- <i class="fas fa-sun"></i></p>
+                    </div>
+                    <div class="sunset-info">
                         <p>Sunset: -- <i class="fas fa-moon"></i></p>
                     </div>
                 </div>
@@ -307,8 +316,10 @@
                         <div class="humidity-info">
                             <p>Humidity: ${humidity}% <i class="fas fa-tint"></i></p>
                         </div>
-                        <div class="sun-info">
+                        <div class="sunrise-info">
                             <p>Sunrise: ${sunrise} <i class="fas fa-sun"></i></p>
+                        </div>
+                        <div class="sunset-info">
                             <p>Sunset: ${sunset} <i class="fas fa-moon"></i></p>
                         </div>
                     </div>
@@ -373,8 +384,10 @@
                         <div class="humidity-info">
                             <p>Humidity: --% <i class="fas fa-tint"></i></p>
                         </div>
-                        <div class="sun-info">
+                        <div class="sunrise-info">
                             <p>Sunrise: -- <i class="fas fa-sun"></i></p>
+                        </div>
+                        <div class="sunset-info">
                             <p>Sunset: -- <i class="fas fa-moon"></i></p>
                         </div>
                     </div>
