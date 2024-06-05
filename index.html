@@ -91,21 +91,24 @@
         font-size: 20px;
         text-transform: capitalize;
     }
-    .wind-info {
+    .wind-info, .humidity-info, .sun-info {
         position: absolute;
         bottom: 10px;
-        right: 10px;
-        text-align: right;
         font-size: 12px;
         color: #fff;
     }
+    .wind-info {
+        right: 10px;
+        text-align: right;
+    }
     .humidity-info {
-        position: absolute;
-        bottom: 10px;
         left: 10px;
         text-align: left;
-        font-size: 12px;
-        color: #fff;
+    }
+    .sun-info {
+        left: 50%;
+        transform: translateX(-50%);
+        text-align: center;
     }
     .loading {
         display: flex;
@@ -173,6 +176,10 @@
             <div class="humidity-info">
                 <p>Humidity: --% <i class="fas fa-tint"></i></p>
             </div>
+            <div class="sun-info">
+                <p>Sunrise: -- <i class="fas fa-sun"></i></p>
+                <p>Sunset: -- <i class="fas fa-moon"></i></p>
+            </div>
         </div>
     </div>
     <div class="forecast-container" id="forecastContainer">
@@ -237,6 +244,10 @@
                     <div class="humidity-info">
                         <p>Humidity: --% <i class="fas fa-tint"></i></p>
                     </div>
+                    <div class="sun-info">
+                        <p>Sunrise: -- <i class="fas fa-sun"></i></p>
+                        <p>Sunset: -- <i class="fas fa-moon"></i></p>
+                    </div>
                 </div>
             `;
             document.getElementById('forecastContainer').innerHTML = `
@@ -257,8 +268,7 @@
                     <i class="weather-icon fas fa-question-circle"></i>
                     <p>-- °C</p>
                     <p>--</p>
-                </div>
-            `;
+                `;
             return;
         }
 
@@ -282,6 +292,8 @@
                 const iconClass = weatherIcons[iconCode];
                 const windSpeed = data.wind.speed;
                 const humidity = data.main.humidity;
+                const sunrise = new Date(data.sys.sunrise * 1000).toLocaleTimeString();
+                const sunset = new Date(data.sys.sunset * 1000).toLocaleTimeString();
 
                 document.getElementById('weatherInfo').innerHTML = `
                     <div class="weather-card">
@@ -294,6 +306,10 @@
                         </div>
                         <div class="humidity-info">
                             <p>Humidity: ${humidity}% <i class="fas fa-tint"></i></p>
+                        </div>
+                        <div class="sun-info">
+                            <p>Sunrise: ${sunrise} <i class="fas fa-sun"></i></p>
+                            <p>Sunset: ${sunset} <i class="fas fa-moon"></i></p>
                         </div>
                     </div>
                 `;
@@ -356,6 +372,10 @@
                         </div>
                         <div class="humidity-info">
                             <p>Humidity: --% <i class="fas fa-tint"></i></p>
+                        </div>
+                        <div class="sun-info">
+                            <p>Sunrise: -- <i class="fas fa-sun"></i></p>
+                            <p>Sunset: -- <i class="fas fa-moon"></i></p>
                         </div>
                     </div>
                 `;
