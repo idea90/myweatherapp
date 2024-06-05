@@ -28,10 +28,12 @@
         backdrop-filter: blur(10px);
         margin-top: 20px;
         text-align: center;
+        animation: fadeIn 1s ease-in-out;
     }
     .search-bar {
         display: flex;
         margin-bottom: 20px;
+        animation: slideIn 1s ease-in-out;
     }
     input[type="text"] {
         flex: 1;
@@ -67,6 +69,7 @@
         margin-top: 20px;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
         position: relative;
+        animation: fadeInUp 1s ease-in-out;
     }
     .weather-icon {
         font-size: 50px;
@@ -135,6 +138,18 @@
         0% { transform: rotate(0deg); }
         100% { transform: rotate(360deg); }
     }
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+    @keyframes slideIn {
+        from { transform: translateY(-20px); }
+        to { transform: translateY(0); }
+    }
+    @keyframes fadeInUp {
+        from { transform: translateY(20px); opacity: 0; }
+        to { transform: translateY(0); opacity: 1; }
+    }
     .forecast-container {
         margin-top: 20px;
         padding: 10px;
@@ -150,6 +165,7 @@
         padding: 10px;
         text-align: center;
         width: 100px;
+        animation: fadeInUp 1s ease-in-out;
     }
     .forecast-card p {
         margin: 5px 0;
@@ -234,11 +250,12 @@
         "50n": "fas fa-smog"
     };
 
+    const apiKey = '8cd8174ec75638397cf97b7ce34b0ad3';
+
     function getWeather() {
-        const apiKey = '8cd8174ec75638397cf97b7ce34b0ad3';
-        const location = document.getElementById('locationInput').value.trim();
-        
-        if (location === '') {
+        const location = document.getElementById('locationInput').value;
+
+        if (!location) {
             document.getElementById('weatherInfo').innerHTML = `
                 <div class="weather-card">
                     <h2>--</h2>
