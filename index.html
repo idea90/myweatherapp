@@ -128,20 +128,18 @@
         100% { transform: rotate(360deg); }
     }
     .forecast-container {
-        overflow-x: auto;
-        white-space: nowrap;
         margin-top: 20px;
         padding: 10px;
         background: rgba(0, 0, 0, 0.7);
         border-radius: 10px;
         box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+        display: flex;
+        justify-content: space-between;
     }
     .forecast-card {
-        display: inline-block;
         background: rgba(255, 255, 255, 0.1);
         border-radius: 10px;
         padding: 10px;
-        margin: 0 10px;
         text-align: center;
         width: 100px;
     }
@@ -179,6 +177,24 @@
     </div>
     <div class="forecast-container" id="forecastContainer">
         <!-- 3-day forecast will be appended here -->
+        <div class="forecast-card">
+            <p>--</p>
+            <i class="weather-icon fas fa-question-circle"></i>
+            <p>-- °C</p>
+            <p>--</p>
+        </div>
+        <div class="forecast-card">
+            <p>--</p>
+            <i class="weather-icon fas fa-question-circle"></i>
+            <p>-- °C</p>
+            <p>--</p>
+        </div>
+        <div class="forecast-card">
+            <p>--</p>
+            <i class="weather-icon fas fa-question-circle"></i>
+            <p>-- °C</p>
+            <p>--</p>
+        </div>
     </div>
 </div>
 
@@ -223,18 +239,33 @@
                     </div>
                 </div>
             `;
+            document.getElementById('forecastContainer').innerHTML = `
+                <div class="forecast-card">
+                    <p>--</p>
+                    <i class="weather-icon fas fa-question-circle"></i>
+                    <p>-- °C</p>
+                    <p>--</p>
+                </div>
+                <div class="forecast-card">
+                    <p>--</p>
+                    <i class="weather-icon fas fa-question-circle"></i>
+                    <p>-- °C</p>
+                    <p>--</p>
+                </div>
+                <div class="forecast-card">
+                    <p>--</p>
+                    <i class="weather-icon fas fa-question-circle"></i>
+                    <p>-- °C</p>
+                    <p>--</p>
+                </div>
+            `;
             return;
         }
 
-        const weatherUrl = `https://api.openweathermap.org/data/2.5/weather?q=${location}&appid=${apiKey}&units=metric`;
-        const forecastUrl = `https://api.openweathermap.org/data/2.5/forecast?q=${location}&appid=${apiKey}&units=metric`;
+        const weatherUrl = `https://api.openweathermap.org/data/2.5/weather?q=${location}&units=metric&appid=${apiKey}`;
+        const forecastUrl = `https://api.openweathermap.org/data/2.5/forecast?q=${location}&units=metric&appid=${apiKey}`;
 
-        document.getElementById('weatherInfo').innerHTML = `
-            <div class="loading">
-                <div class="spinner"></div>
-            </div>
-        `;
-        document.getElementById('forecastContainer').innerHTML = '';
+        document.getElementById('weatherInfo').innerHTML = '<div class="loading"><div class="spinner"></div></div>';
 
         fetch(weatherUrl)
             .then(response => {
@@ -244,7 +275,6 @@
                 return response.json();
             })
             .then(data => {
-                const weatherInfo = document.getElementById('weatherInfo');
                 const cityName = data.name;
                 const temperature = data.main.temp.toFixed(1);
                 const description = data.weather[0].description;
@@ -253,7 +283,7 @@
                 const windSpeed = data.wind.speed;
                 const humidity = data.main.humidity;
 
-                weatherInfo.innerHTML = `
+                document.getElementById('weatherInfo').innerHTML = `
                     <div class="weather-card">
                         <h2>${cityName}</h2>
                         <i class="weather-icon ${iconClass}"></i>
@@ -278,6 +308,7 @@
             })
             .then(data => {
                 const forecastContainer = document.getElementById('forecastContainer');
+                forecastContainer.innerHTML = '';
                 const forecastList = data.list;
                 const dailyForecasts = {};
 
@@ -328,9 +359,29 @@
                         </div>
                     </div>
                 `;
+                document.getElementById('forecastContainer').innerHTML = `
+                    <div class="forecast-card">
+                        <p>--</p>
+                        <i class="weather-icon fas fa-question-circle"></i>
+                        <p>-- °C</p>
+                        <p>--</p>
+                    </div>
+                    <div class="forecast-card">
+                        <p>--</p>
+                        <i class="weather-icon fas fa-question-circle"></i>
+                        <p>-- °C</p>
+                        <p>--</p>
+                    </div>
+                    <div class="forecast-card">
+                        <p>--</p>
+                        <i class="weather-icon fas fa-question-circle"></i>
+                        <p>-- °C</p>
+                        <p>--</p>
+                    </div>
+                `;
             });
     }
 </script>
 
 </body>
-</html
+</html>
