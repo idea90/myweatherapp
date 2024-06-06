@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Advanced Weather Dashboard</title>
+<title>Weather App</title>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 <style>
@@ -20,19 +20,15 @@
         justify-content: center;
         text-align: center;
     }
-    .dashboard {
-        display: flex;
-        flex-direction: column;
-        width: 90%;
-        max-width: 1200px;
-        gap: 20px;
-    }
     .card {
         background-color: rgba(0, 0, 0, 0.5);
         padding: 20px;
         border-radius: 10px;
         box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
         backdrop-filter: blur(10px);
+        margin-bottom: 20px;
+        width: 90%;
+        max-width: 400px;
     }
     .search-bar {
         display: flex;
@@ -63,30 +59,12 @@
     button:hover {
         background-color: #45a049;
     }
-    .current-weather, .forecast, .additional-info, .alerts {
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-    }
-    .current-weather {
-        align-items: center;
-    }
-    .current-weather h2 {
-        font-size: 24px;
-        margin-bottom: 10px;
+    .current-weather h2, .current-weather .temperature, .current-weather .description {
+        margin: 10px 0;
     }
     .weather-icon {
         font-size: 50px;
-        margin-bottom: 10px;
-    }
-    .temperature {
-        font-size: 30px;
-        font-weight: bold;
-    }
-    .description {
-        font-size: 20px;
-        text-transform: capitalize;
-        margin-bottom: 20px;
+        margin: 10px 0;
     }
     .forecast {
         display: flex;
@@ -111,9 +89,9 @@
     .additional-info {
         display: flex;
         justify-content: space-between;
+        margin-top: 20px;
     }
     .additional-info div {
-        flex: 1;
         text-align: left;
     }
     .additional-info p {
@@ -148,51 +126,51 @@
 </head>
 <body>
 
-<div class="dashboard">
-    <div class="card search-bar">
-        <input type="text" id="locationInput" placeholder="Enter location">
-        <button onclick="getWeather()"><i class="fas fa-search"></i></button>
-    </div>
-    <div class="card current-weather" id="currentWeather">
-        <h2>Current Weather</h2>
+<div class="search-bar card">
+    <input type="text" id="locationInput" placeholder="Enter location">
+    <button onclick="getWeather()"><i class="fas fa-search"></i></button>
+</div>
+
+<div class="current-weather card" id="currentWeather">
+    <h2>Weather</h2>
+    <i class="weather-icon fas fa-question-circle"></i>
+    <p class="temperature">-- °C</p>
+    <p class="description">--</p>
+</div>
+
+<div class="forecast card" id="forecastContainer">
+    <div class="forecast-card">
+        <p>--</p>
         <i class="weather-icon fas fa-question-circle"></i>
-        <p class="temperature">-- °C</p>
-        <p class="description">--</p>
+        <p>-- °C</p>
+        <p>--</p>
     </div>
-    <div class="card forecast" id="forecastContainer">
-        <div class="forecast-card">
-            <p>--</p>
-            <i class="weather-icon fas fa-question-circle"></i>
-            <p>-- °C</p>
-            <p>--</p>
-        </div>
-        <div class="forecast-card">
-            <p>--</p>
-            <i class="weather-icon fas fa-question-circle"></i>
-            <p>-- °C</p>
-            <p>--</p>
-        </div>
-        <div class="forecast-card">
-            <p>--</p>
-            <i class="weather-icon fas fa-question-circle"></i>
-            <p>-- °C</p>
-            <p>--</p>
-        </div>
+    <div class="forecast-card">
+        <p>--</p>
+        <i class="weather-icon fas fa-question-circle"></i>
+        <p>-- °C</p>
+        <p>--</p>
     </div>
-    <div class="card additional-info" id="additionalInfo">
-        <div>
-            <p>Humidity: -- <i class="fas fa-tint info-icon"></i></p>
-            <p>Wind Speed: -- <i class="fas fa-wind info-icon"></i></p>
-        </div>
-        <div>
-            <p>Sunrise: -- <i class="fas fa-sun info-icon"></i></p>
-            <p>Sunset: -- <i class="fas fa-moon info-icon"></i></p>
-        </div>
-    </div>
-    <div class="card alerts" id="alerts">
-        <!-- Weather alerts will be displayed here -->
+    <div class="forecast-card">
+        <p>--</p>
+        <i class="weather-icon fas fa-question-circle"></i>
+        <p>-- °C</p>
+        <p>--</p>
     </div>
 </div>
+
+<div class="additional-info card" id="additionalInfo">
+    <div>
+        <p>Humidity: -- <i class="fas fa-tint"></i></p>
+        <p>Wind Speed: -- <i class="fas fa-wind"></i></p>
+    </div>
+    <div>
+        <p>Sunrise: -- <i class="fas fa-sun"></i></p>
+        <p>Sunset: -- <i class="fas fa-moon"></i></p>
+    </div>
+</div>
+
+<div class="alerts card" id="alerts"></div>
 
 <script>
     const weatherIcons = {
@@ -223,7 +201,7 @@
 
         if (!location) {
             document.getElementById('currentWeather').innerHTML = `
-                <h2>Current Weather</h2>
+                <h2>Weather</h2>
                 <i class="weather-icon fas fa-question-circle"></i>
                 <p class="temperature">-- °C</p>
                 <p class="description">--</p>
@@ -250,12 +228,12 @@
             `;
             document.getElementById('additionalInfo').innerHTML = `
                 <div>
-                    <p>Humidity: -- <i class="fas fa-tint info-icon"></i></p>
-                    <p>Wind Speed: -- <i class="fas fa-wind info-icon"></i></p>
+                    <p>Humidity: -- <i class="fas fa-tint"></i></p>
+                    <p>Wind Speed: -- <i class="fas fa-wind"></i></p>
                 </div>
                 <div>
-                    <p>Sunrise: -- <i class="fas fa-sun info-icon"></i></p>
-                    <p>Sunset: -- <i class="fas fa-moon info-icon"></i></p>
+                    <p>Sunrise: -- <i class="fas fa-sun"></i></p>
+                    <p>Sunset: -- <i class="fas fa-moon"></i></p>
                 </div>
             `;
             return;
