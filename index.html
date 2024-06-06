@@ -6,7 +6,6 @@
 <title>Advanced Weather Dashboard</title>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
     body {
         font-family: "Poppins", sans-serif;
@@ -64,7 +63,7 @@
     button:hover {
         background-color: #45a049;
     }
-    .current-weather, .forecast, .additional-info, .chart-container, .alerts {
+    .current-weather, .forecast, .additional-info, .alerts {
         display: flex;
         flex-direction: column;
         gap: 10px;
@@ -189,9 +188,6 @@
             <p>Sunrise: -- <i class="fas fa-sun info-icon"></i></p>
             <p>Sunset: -- <i class="fas fa-moon info-icon"></i></p>
         </div>
-    </div>
-    <div class="card chart-container" id="chartContainer" style="display: none;">
-        <canvas id="weatherChart"></canvas>
     </div>
     <div class="card alerts" id="alerts">
         <!-- Weather alerts will be displayed here -->
@@ -328,10 +324,6 @@
                 forecastContainer.innerHTML = '';
                 const forecastList = data.list.slice(0, 24);
 
-                const temperatures = forecastList.map(item => item.main.temp.toFixed(1));
-                const humidity = forecastList.map(item => item.main.humidity);
-                const times = forecastList.map(item => new Date(item.dt * 1000).toLocaleTimeString());
-
                 const dailyForecasts = {};
 
                 forecastList.forEach(item => {
@@ -363,51 +355,6 @@
                             <p>${description}</p>
                         </div>
                     `;
-                });
-
-                document.getElementById('chartContainer').style.display = 'block';
-                const ctx = document.getElementById('weatherChart').getContext('2d');
-                new Chart(ctx, {
-                    type: 'line',
-                    data: {
-                        labels: times,
-                        datasets: [
-                            {
-                                label: 'Temperature (°C)',
-                                data: temperatures,
-                                borderColor: '#4CAF50',
-                                fill: false,
-                                yAxisID: 'temp'
-                            },
-                            {
-                                label: 'Humidity (%)',
-                                data: humidity,
-                                borderColor: '#00ACC1',
-                                fill: false,
-                                yAxisID: 'humidity'
-                            }
-                        ]
-                    },
-                    options: {
-                        scales: {
-                            temp: {
-                                type: 'linear',
-                                position: 'left',
-                                title: {
-                                    display: true,
-                                    text: 'Temperature (°C)'
-                                }
-                            },
-                            humidity: {
-                                type: 'linear',
-                                position: 'right',
-                                title: {
-                                    display: true,
-                                    text: 'Humidity (%)'
-                                }
-                            }
-                        }
-                    }
                 });
             })
             .catch(error => {
