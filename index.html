@@ -3,9 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Weather Website</title>
+<title>Advanced Weather App</title>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
     body {
         font-family: "Poppins", sans-serif;
@@ -17,36 +18,35 @@
         align-items: center;
         height: 100vh;
         color: #fff;
+        justify-content: center;
+        text-align: center;
     }
     .container {
-        max-width: 400px;
-        width: 100%;
-        background: rgba(0, 0, 0, 0.7);
+        backdrop-filter: blur(10px);
+        background-color: rgba(0, 0, 0, 0.5);
+        padding: 20px 30px;
         border-radius: 10px;
         box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
-        padding: 20px;
-        backdrop-filter: blur(10px);
-        margin-top: 20px;
-        text-align: center;
-        animation: fadeIn 1s ease-in-out;
+        width: 90%;
+        max-width: 600px;
     }
     .search-bar {
         display: flex;
+        justify-content: center;
         margin-bottom: 20px;
-        animation: slideIn 1s ease-in-out;
     }
     input[type="text"] {
-        flex: 1;
-        padding: 6px;
-        border: 2px solid #4CAF50;
+        padding: 10px;
+        border: none;
         border-radius: 5px 0 0 5px;
         font-family: "Poppins", sans-serif;
         font-size: 14px;
         background-color: #333;
         color: #fff;
+        flex: 1;
     }
     button {
-        padding: 6px 12px;
+        padding: 10px 15px;
         background-color: #4CAF50;
         color: white;
         border: none;
@@ -60,31 +60,17 @@
     }
     .weather-info {
         margin-top: 20px;
-    }
-    .weather-card {
-        background-color: rgba(255, 255, 255, 0.1);
-        border-radius: 10px;
-        padding: 20px;
-        text-align: center;
-        margin-top: 20px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-        position: relative;
         animation: fadeInUp 1s ease-in-out;
+    }
+    .weather-info h2 {
+        font-size: 24px;
+        margin-bottom: 10px;
+        color: #fff;
     }
     .weather-icon {
         font-size: 50px;
         margin-bottom: 10px;
         color: #4caf50;
-    }
-    .weather-info p {
-        margin: 5px 0;
-        font-size: 14px;
-        color: #fff;
-    }
-    h2 {
-        font-size: 24px;
-        color: #fff;
-        margin-bottom: 10px;
     }
     .temperature {
         font-size: 30px;
@@ -93,30 +79,44 @@
     .description {
         font-size: 20px;
         text-transform: capitalize;
+        margin-bottom: 20px;
     }
-    .wind-info, .humidity-info, .sunrise-info, .sunset-info {
-        position: absolute;
-        bottom: 10px;
-        font-size: 12px;
+    .forecast-container {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 20px;
+    }
+    .forecast-card {
+        background-color: rgba(0, 0, 0, 0.7);
+        border-radius: 10px;
+        padding: 15px;
+        text-align: center;
+        margin: 0 5px;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+        flex: 1;
+    }
+    .forecast-card p {
+        margin: 5px 0;
+        font-size: 14px;
         color: #fff;
     }
-    .wind-info {
-        right: 10px;
-        text-align: right;
+    .forecast-card .weather-icon {
+        font-size: 30px;
+        color: #4caf50;
     }
-    .humidity-info {
-        left: 10px;
+    .additional-info {
+        margin-top: 20px;
+        display: flex;
+        justify-content: space-between;
+    }
+    .additional-info p {
+        margin: 5px 0;
+        font-size: 14px;
         text-align: left;
     }
-    .sunrise-info {
-        left: 10px;
-        top: 10px;
-        text-align: left;
-    }
-    .sunset-info {
-        right: 10px;
-        top: 10px;
-        text-align: right;
+    .additional-info .info-icon {
+        font-size: 16px;
+        margin-left: 5px;
     }
     .loading {
         display: flex;
@@ -134,47 +134,18 @@
         height: 24px;
         animation: spin 1s linear infinite;
     }
+    .alerts {
+        margin-top: 20px;
+        color: #ff3d00;
+        font-size: 16px;
+    }
     @keyframes spin {
         0% { transform: rotate(0deg); }
         100% { transform: rotate(360deg); }
     }
-    @keyframes fadeIn {
-        from { opacity: 0; }
-        to { opacity: 1; }
-    }
-    @keyframes slideIn {
-        from { transform: translateY(-20px); }
-        to { transform: translateY(0); }
-    }
     @keyframes fadeInUp {
         from { transform: translateY(20px); opacity: 0; }
         to { transform: translateY(0); opacity: 1; }
-    }
-    .forecast-container {
-        margin-top: 20px;
-        padding: 10px;
-        background: rgba(0, 0, 0, 0.7);
-        border-radius: 10px;
-        box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
-        display: flex;
-        justify-content: space-between;
-    }
-    .forecast-card {
-        background: rgba(255, 255, 255, 0.1);
-        border-radius: 10px;
-        padding: 10px;
-        text-align: center;
-        width: 100px;
-        animation: fadeInUp 1s ease-in-out;
-    }
-    .forecast-card p {
-        margin: 5px 0;
-        font-size: 14px;
-        color: #fff;
-    }
-    .forecast-card .weather-icon {
-        font-size: 30px;
-        color: #4caf50;
     }
 </style>
 </head>
@@ -185,28 +156,18 @@
         <input type="text" id="locationInput" placeholder="Enter location">
         <button onclick="getWeather()"><i class="fas fa-search"></i></button>
     </div>
-    <div class="weather-info" id="weatherInfo">
+    <div class="weather-info" id="currentWeather">
         <div class="weather-card">
-            <h2>--</h2>
+            <h2>Current Weather</h2>
             <i class="weather-icon fas fa-question-circle"></i>
             <p class="temperature">-- °C</p>
             <p class="description">--</p>
-            <div class="wind-info">
-                <p>Wind: -- m/s <i class="fas fa-wind"></i></p>
-            </div>
-            <div class="humidity-info">
-                <p>Humidity: --% <i class="fas fa-tint"></i></p>
-            </div>
-            <div class="sunrise-info">
-                <p>Sunrise: -- <i class="fas fa-sun"></i></p>
-            </div>
-            <div class="sunset-info">
-                <p>Sunset: -- <i class="fas fa-moon"></i></p>
-            </div>
         </div>
     </div>
+    <div id="chartContainer" style="display: none; margin-top: 20px;">
+        <canvas id="weatherChart"></canvas>
+    </div>
     <div class="forecast-container" id="forecastContainer">
-        <!-- 3-day forecast will be appended here -->
         <div class="forecast-card">
             <p>--</p>
             <i class="weather-icon fas fa-question-circle"></i>
@@ -225,6 +186,19 @@
             <p>-- °C</p>
             <p>--</p>
         </div>
+    </div>
+    <div class="additional-info" id="additionalInfo">
+        <div>
+            <p>Humidity: -- <i class="fas fa-tint info-icon"></i></p>
+            <p>Wind Speed: -- <i class="fas fa-wind info-icon"></i></p>
+        </div>
+        <div>
+            <p>Sunrise: -- <i class="fas fa-sun info-icon"></i></p>
+            <p>Sunset: -- <i class="fas fa-moon info-icon"></i></p>
+        </div>
+    </div>
+    <div class="alerts" id="alerts">
+        <!-- Weather alerts will be displayed here -->
     </div>
 </div>
 
@@ -256,24 +230,12 @@
         const location = document.getElementById('locationInput').value;
 
         if (!location) {
-            document.getElementById('weatherInfo').innerHTML = `
+            document.getElementById('currentWeather').innerHTML = `
                 <div class="weather-card">
-                    <h2>--</h2>
+                    <h2>Current Weather</h2>
                     <i class="weather-icon fas fa-question-circle"></i>
                     <p class="temperature">-- °C</p>
                     <p class="description">--</p>
-                    <div class="wind-info">
-                        <p>Wind: -- m/s <i class="fas fa-wind"></i></p>
-                    </div>
-                    <div class="humidity-info">
-                        <p>Humidity: --% <i class="fas fa-tint"></i></p>
-                    </div>
-                    <div class="sunrise-info">
-                        <p>Sunrise: -- <i class="fas fa-sun"></i></p>
-                    </div>
-                    <div class="sunset-info">
-                        <p>Sunset: -- <i class="fas fa-moon"></i></p>
-                    </div>
                 </div>
             `;
             document.getElementById('forecastContainer').innerHTML = `
@@ -294,14 +256,28 @@
                     <i class="weather-icon fas fa-question-circle"></i>
                     <p>-- °C</p>
                     <p>--</p>
-                `;
+                </div>
+            `;
+            document.getElementById('additionalInfo').innerHTML = `
+                <div>
+                    <p>Humidity: -- <i class="fas fa-tint info-icon"></i></p>
+                    <p>Wind Speed: -- <i class="fas fa-wind info-icon"></i></p>
+                </div>
+                <div>
+                    <p>Sunrise: -- <i class="fas fa-sun info-icon"></i></p>
+                    <p>Sunset: -- <i class="fas fa-moon info-icon"></i></p>
+                </div>
+            `;
             return;
         }
 
         const weatherUrl = `https://api.openweathermap.org/data/2.5/weather?q=${location}&units=metric&appid=${apiKey}`;
         const forecastUrl = `https://api.openweathermap.org/data/2.5/forecast?q=${location}&units=metric&appid=${apiKey}`;
 
-        document.getElementById('weatherInfo').innerHTML = '<div class="loading"><div class="spinner"></div></div>';
+        document.getElementById('currentWeather').innerHTML = '<div class="loading"><div class="spinner"></div> Loading...</div>';
+        document.getElementById('forecastContainer').innerHTML = '<div class="loading"><div class="spinner"></div> Loading...</div>';
+        document.getElementById('additionalInfo').innerHTML = '<div class="loading"><div class="spinner"></div> Loading...</div>';
+        document.getElementById('alerts').innerHTML = '';
 
         fetch(weatherUrl)
             .then(response => {
@@ -316,31 +292,36 @@
                 const description = data.weather[0].description;
                 const iconCode = data.weather[0].icon;
                 const iconClass = weatherIcons[iconCode];
-                const windSpeed = data.wind.speed;
-                const humidity = data.main.humidity;
                 const sunrise = new Date(data.sys.sunrise * 1000).toLocaleTimeString();
                 const sunset = new Date(data.sys.sunset * 1000).toLocaleTimeString();
+                const humidity = data.main.humidity;
+                const windSpeed = data.wind.speed;
 
-                document.getElementById('weatherInfo').innerHTML = `
+                document.getElementById('currentWeather').innerHTML = `
                     <div class="weather-card">
                         <h2>${cityName}</h2>
                         <i class="weather-icon ${iconClass}"></i>
                         <p class="temperature">${temperature}°C</p>
                         <p class="description">${description}</p>
-                        <div class="wind-info">
-                            <p>Wind: ${windSpeed} m/s <i class="fas fa-wind"></i></p>
-                        </div>
-                        <div class="humidity-info">
-                            <p>Humidity: ${humidity}% <i class="fas fa-tint"></i></p>
-                        </div>
-                        <div class="sunrise-info">
-                            <p>Sunrise: ${sunrise} <i class="fas fa-sun"></i></p>
-                        </div>
-                        <div class="sunset-info">
-                            <p>Sunset: ${sunset} <i class="fas fa-moon"></i></p>
-                        </div>
                     </div>
                 `;
+
+                document.getElementById('additionalInfo').innerHTML = `
+                    <div>
+                        <p>Humidity: ${humidity}% <i class="fas fa-tint"></i></p>
+                        <p>Wind Speed: ${windSpeed} m/s <i class="fas fa-wind"></i></p>
+                    </div>
+                    <div>
+                        <p>Sunrise: ${sunrise} <i class="fas fa-sun"></i></p>
+                        <p>Sunset: ${sunset} <i class="fas fa-moon"></i></p>
+                    </div>
+                `;
+
+                if (data.alerts) {
+                    data.alerts.forEach(alert => {
+                        document.getElementById('alerts').innerHTML += `<p>${alert.event}: ${alert.description}</p>`;
+                    });
+                }
 
                 return fetch(forecastUrl);
             })
@@ -353,7 +334,12 @@
             .then(data => {
                 const forecastContainer = document.getElementById('forecastContainer');
                 forecastContainer.innerHTML = '';
-                const forecastList = data.list;
+                const forecastList = data.list.slice(0, 24);
+
+                const temperatures = forecastList.map(item => item.main.temp.toFixed(1));
+                const humidity = forecastList.map(item => item.main.humidity);
+                const times = forecastList.map(item => new Date(item.dt * 1000).toLocaleTimeString());
+
                 const dailyForecasts = {};
 
                 forecastList.forEach(item => {
@@ -386,27 +372,60 @@
                         </div>
                     `;
                 });
+
+                document.getElementById('chartContainer').style.display = 'block';
+                const ctx = document.getElementById('weatherChart').getContext('2d');
+                new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: times,
+                        datasets: [
+                            {
+                                label: 'Temperature (°C)',
+                                data: temperatures,
+                                borderColor: '#4CAF50',
+                                fill: false,
+                                yAxisID: 'temp'
+                            },
+                            {
+                                label: 'Humidity (%)',
+                                data: humidity,
+                                borderColor: '#00ACC1',
+                                fill: false,
+                                yAxisID: 'humidity'
+                            }
+                        ]
+                    },
+                    options: {
+                        scales: {
+                            temp: {
+                                type: 'linear',
+                                position: 'left',
+                                title: {
+                                    display: true,
+                                    text: 'Temperature (°C)'
+                                }
+                            },
+                            humidity: {
+                                type: 'linear',
+                                position: 'right',
+                                title: {
+                                    display: true,
+                                    text: 'Humidity (%)'
+                                }
+                            }
+                        }
+                    }
+                });
             })
             .catch(error => {
                 console.error('Error fetching weather data:', error);
-                document.getElementById('weatherInfo').innerHTML = `
+                document.getElementById('currentWeather').innerHTML = `
                     <div class="weather-card">
                         <h2>City Not Found</h2>
                         <i class="weather-icon fas fa-exclamation-triangle"></i>
                         <p class="temperature">-- °C</p>
                         <p class="description">Please try again</p>
-                        <div class="wind-info">
-                            <p>Wind: -- m/s <i class="fas fa-wind"></i></p>
-                        </div>
-                        <div class="humidity-info">
-                            <p>Humidity: --% <i class="fas fa-tint"></i></p>
-                        </div>
-                        <div class="sunrise-info">
-                            <p>Sunrise: -- <i class="fas fa-sun"></i></p>
-                        </div>
-                        <div class="sunset-info">
-                            <p>Sunset: -- <i class="fas fa-moon"></i></p>
-                        </div>
                     </div>
                 `;
                 document.getElementById('forecastContainer').innerHTML = `
@@ -427,6 +446,16 @@
                         <i class="weather-icon fas fa-question-circle"></i>
                         <p>-- °C</p>
                         <p>--</p>
+                    </div>
+                `;
+                document.getElementById('additionalInfo').innerHTML = `
+                    <div>
+                        <p>Humidity: -- <i class="fas fa-tint info-icon"></i></p>
+                        <p>Wind Speed: -- <i class="fas fa-wind info-icon"></i></p>
+                    </div>
+                    <div>
+                        <p>Sunrise: -- <i class="fas fa-sun info-icon"></i></p>
+                        <p>Sunset: -- <i class="fas fa-moon info-icon"></i></p>
                     </div>
                 `;
             });
