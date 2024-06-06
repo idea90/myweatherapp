@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Advanced Weather App</title>
+<title>Advanced Weather Dashboard</title>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -21,24 +21,30 @@
         justify-content: center;
         text-align: center;
     }
-    .container {
-        backdrop-filter: blur(10px);
+    .dashboard {
+        display: flex;
+        flex-direction: column;
+        width: 90%;
+        max-width: 1200px;
+        gap: 20px;
+    }
+    .card {
         background-color: rgba(0, 0, 0, 0.5);
-        padding: 20px 30px;
+        padding: 20px;
         border-radius: 10px;
         box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
-        width: 90%;
-        max-width: 600px;
+        backdrop-filter: blur(10px);
     }
     .search-bar {
         display: flex;
         justify-content: center;
+        gap: 10px;
         margin-bottom: 20px;
     }
     input[type="text"] {
         padding: 10px;
         border: none;
-        border-radius: 5px 0 0 5px;
+        border-radius: 5px;
         font-family: "Poppins", sans-serif;
         font-size: 14px;
         background-color: #333;
@@ -50,7 +56,7 @@
         background-color: #4CAF50;
         color: white;
         border: none;
-        border-radius: 0 5px 5px 0;
+        border-radius: 5px;
         cursor: pointer;
         font-family: "Poppins", sans-serif;
         font-size: 14px;
@@ -58,19 +64,21 @@
     button:hover {
         background-color: #45a049;
     }
-    .weather-info {
-        margin-top: 20px;
-        animation: fadeInUp 1s ease-in-out;
+    .current-weather, .forecast, .additional-info, .chart-container, .alerts {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
     }
-    .weather-info h2 {
+    .current-weather {
+        align-items: center;
+    }
+    .current-weather h2 {
         font-size: 24px;
         margin-bottom: 10px;
-        color: #fff;
     }
     .weather-icon {
         font-size: 50px;
         margin-bottom: 10px;
-        color: #4caf50;
     }
     .temperature {
         font-size: 30px;
@@ -81,42 +89,37 @@
         text-transform: capitalize;
         margin-bottom: 20px;
     }
-    .forecast-container {
+    .forecast {
         display: flex;
         justify-content: space-between;
-        margin-top: 20px;
+        gap: 10px;
     }
     .forecast-card {
-        background-color: rgba(0, 0, 0, 0.7);
-        border-radius: 10px;
-        padding: 15px;
-        text-align: center;
-        margin: 0 5px;
-        box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
         flex: 1;
+        padding: 10px;
+        border-radius: 10px;
+        background-color: rgba(0, 0, 0, 0.7);
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+        text-align: center;
     }
     .forecast-card p {
         margin: 5px 0;
         font-size: 14px;
-        color: #fff;
     }
     .forecast-card .weather-icon {
         font-size: 30px;
-        color: #4caf50;
     }
     .additional-info {
-        margin-top: 20px;
         display: flex;
         justify-content: space-between;
+    }
+    .additional-info div {
+        flex: 1;
+        text-align: left;
     }
     .additional-info p {
         margin: 5px 0;
         font-size: 14px;
-        text-align: left;
-    }
-    .additional-info .info-icon {
-        font-size: 16px;
-        margin-left: 5px;
     }
     .loading {
         display: flex;
@@ -134,8 +137,7 @@
         height: 24px;
         animation: spin 1s linear infinite;
     }
-    .alerts {
-        margin-top: 20px;
+    .alerts p {
         color: #ff3d00;
         font-size: 16px;
     }
@@ -143,31 +145,22 @@
         0% { transform: rotate(0deg); }
         100% { transform: rotate(360deg); }
     }
-    @keyframes fadeInUp {
-        from { transform: translateY(20px); opacity: 0; }
-        to { transform: translateY(0); opacity: 1; }
-    }
 </style>
 </head>
 <body>
 
-<div class="container">
-    <div class="search-bar">
+<div class="dashboard">
+    <div class="card search-bar">
         <input type="text" id="locationInput" placeholder="Enter location">
         <button onclick="getWeather()"><i class="fas fa-search"></i></button>
     </div>
-    <div class="weather-info" id="currentWeather">
-        <div class="weather-card">
-            <h2>Current Weather</h2>
-            <i class="weather-icon fas fa-question-circle"></i>
-            <p class="temperature">-- °C</p>
-            <p class="description">--</p>
-        </div>
+    <div class="card current-weather" id="currentWeather">
+        <h2>Current Weather</h2>
+        <i class="weather-icon fas fa-question-circle"></i>
+        <p class="temperature">-- °C</p>
+        <p class="description">--</p>
     </div>
-    <div id="chartContainer" style="display: none; margin-top: 20px;">
-        <canvas id="weatherChart"></canvas>
-    </div>
-    <div class="forecast-container" id="forecastContainer">
+    <div class="card forecast" id="forecastContainer">
         <div class="forecast-card">
             <p>--</p>
             <i class="weather-icon fas fa-question-circle"></i>
@@ -187,7 +180,7 @@
             <p>--</p>
         </div>
     </div>
-    <div class="additional-info" id="additionalInfo">
+    <div class="card additional-info" id="additionalInfo">
         <div>
             <p>Humidity: -- <i class="fas fa-tint info-icon"></i></p>
             <p>Wind Speed: -- <i class="fas fa-wind info-icon"></i></p>
@@ -197,7 +190,10 @@
             <p>Sunset: -- <i class="fas fa-moon info-icon"></i></p>
         </div>
     </div>
-    <div class="alerts" id="alerts">
+    <div class="card chart-container" id="chartContainer" style="display: none;">
+        <canvas id="weatherChart"></canvas>
+    </div>
+    <div class="card alerts" id="alerts">
         <!-- Weather alerts will be displayed here -->
     </div>
 </div>
@@ -231,12 +227,10 @@
 
         if (!location) {
             document.getElementById('currentWeather').innerHTML = `
-                <div class="weather-card">
-                    <h2>Current Weather</h2>
-                    <i class="weather-icon fas fa-question-circle"></i>
-                    <p class="temperature">-- °C</p>
-                    <p class="description">--</p>
-                </div>
+                <h2>Current Weather</h2>
+                <i class="weather-icon fas fa-question-circle"></i>
+                <p class="temperature">-- °C</p>
+                <p class="description">--</p>
             `;
             document.getElementById('forecastContainer').innerHTML = `
                 <div class="forecast-card">
@@ -298,12 +292,10 @@
                 const windSpeed = data.wind.speed;
 
                 document.getElementById('currentWeather').innerHTML = `
-                    <div class="weather-card">
-                        <h2>${cityName}</h2>
-                        <i class="weather-icon ${iconClass}"></i>
-                        <p class="temperature">${temperature}°C</p>
-                        <p class="description">${description}</p>
-                    </div>
+                    <h2>${cityName}</h2>
+                    <i class="weather-icon ${iconClass}"></i>
+                    <p class="temperature">${temperature}°C</p>
+                    <p class="description">${description}</p>
                 `;
 
                 document.getElementById('additionalInfo').innerHTML = `
@@ -421,12 +413,10 @@
             .catch(error => {
                 console.error('Error fetching weather data:', error);
                 document.getElementById('currentWeather').innerHTML = `
-                    <div class="weather-card">
-                        <h2>City Not Found</h2>
-                        <i class="weather-icon fas fa-exclamation-triangle"></i>
-                        <p class="temperature">-- °C</p>
-                        <p class="description">Please try again</p>
-                    </div>
+                    <h2>City Not Found</h2>
+                    <i class="weather-icon fas fa-exclamation-triangle"></i>
+                    <p class="temperature">-- °C</p>
+                    <p class="description">Please try again</p>
                 `;
                 document.getElementById('forecastContainer').innerHTML = `
                     <div class="forecast-card">
